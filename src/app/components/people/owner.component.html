@@ -1,0 +1,10 @@
+<div class="wrap">
+  <div class="buttons">
+    <button >Add</button>
+    <button (click)="openWindow('read')">Show</button>
+    <button (click)="openWindow('edit')">Edit</button>
+    <button (click)="delete()">Delete</button>
+  </div>
+  <app-table [dataOwner] = "dataOwners"></app-table>
+</div>
+

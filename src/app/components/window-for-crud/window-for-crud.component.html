@@ -1,0 +1,78 @@
+<div class="wrap">
+  <div class="window">
+
+    <button class="button-close" mat-button mat-dialog-close>Cancel</button>
+
+    <form [formGroup]="owner" (ngSubmit)="onSubmit()" class="formOwner">
+      <mat-form-field class="example-full-width" appearance="legacy">
+        <mat-label>Name</mat-label>
+        <input required minlength="2" [maxLength]="50" [disabled]="disabledItem" formControlName="name" matInput
+               placeholder="Name">
+        <mat-error *ngIf="Name.invalid || lastName.isRequired">minlength should be more then 2</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width" appearance="legacy">
+        <mat-label>Surname</mat-label>
+        <input required minlength="2" [maxLength]="50" [disabled]="disabledItem" formControlName="firstName" matInput
+               placeholder="Surname">
+        <mat-error *ngIf="firstName.invalid || lastName.isRequired">minlength should be more then 2</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width" appearance="legacy">
+        <mat-label>Last Name</mat-label>
+        <input required minlength="2" [maxLength]="50" [disabled]="disabledItem" formControlName="lastName" matInput
+               placeholder="Last Name">
+        <mat-error *ngIf="lastName.invalid || lastName.isRequired">minlength should be more then 2</mat-error>
+      </mat-form-field>
+
+      <div class="title">Cars</div>
+      <app-table class="table" [dataOwner]="dataCars"></app-table>
+      <div class="addCar" *ngIf="this.isAddCar">
+
+          <mat-form-field class="example-full-width" appearance="legacy">
+            <mat-label>Number</mat-label>
+            <input required minlength="2" [maxLength]="8" [minLength]="8" [disabled]="disabledItem" formControlName="number" matInput
+                   placeholder="Number">
+            <mat-error *ngIf="Number.invalid || Number.isRequired">minlength should be more then 8</mat-error>
+          </mat-form-field>
+          <mat-form-field class="example-full-width" appearance="legacy">
+            <mat-label>Name of care</mat-label>
+            <input required minlength="2" [maxLength]="50" [disabled]="disabledItem" formControlName="nameCare" matInput
+                   placeholder="Name of care">
+            <mat-error *ngIf="NameCare.invalid || NameCare.isRequired">minlength should be more then 2</mat-error>
+          </mat-form-field>
+          <mat-form-field class="example-full-width" appearance="legacy">
+            <mat-label>Model</mat-label>
+            <input required minlength="2" [maxLength]="50" [disabled]="disabledItem" formControlName="model" matInput
+                   placeholder="Model">
+            <mat-error *ngIf="Model.invalid || Model.isRequired">minlength should be more then 2</mat-error>
+          </mat-form-field>
+          <mat-form-field class="example-full-width" appearance="legacy">
+            <mat-label>Year</mat-label>
+            <input required minlength="2" [maxLength]="50" [disabled]="disabledItem" formControlName="year" matInput
+                   placeholder="Year">
+            <mat-error *ngIf="Year.invalid || Year.isRequired">minlength should be more then 2</mat-error>
+          </mat-form-field>
+      </div>
+
+
+
+    </form>
+
+    <div class="buttons">
+      <button mat-button class="mat-button add" [style.visibility]="disabledItem ? 'hidden' : 'visible'"
+              *ngIf="this.isAddCar" (click)="addCar()">Add car
+      </button>
+      <button mat-button class="mat-button add" [style.visibility]="disabledItem ? 'hidden' : 'visible'"
+              *ngIf="!this.isAddCar" (click)="addColumn()">Add car
+      </button>
+      <button mat-button class="mat-button update" [style.visibility]="disabledItem ? 'hidden' : 'visible'"
+              [disabled]="!owner.valid" (click)="save()">Save
+      </button>
+      <button mat-button class="mat-button delete" [style.visibility]="disabledItem ? 'hidden' : 'visible'"
+              (click)="delete()">Delete
+      </button>
+    </div>
+
+  </div>
+</div>

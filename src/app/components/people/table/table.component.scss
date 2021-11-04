@@ -1,0 +1,48 @@
+table {
+  width: 100%;
+  box-shadow: 0 0 5px black;
+  margin-top: 30px;
+}
+.icon{
+  width: 50px;
+  height: 50px;
+  img{
+    width: 100%;
+  }
+}
+
+
+/*.mat-row .mat-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}*/
+
+.mat-row:hover {
+  background: rgba(0, 128, 0, 0.1);
+  border-color: currentColor;
+}
+.mat-row:checked {
+  background: rgba(0, 128, 0, 0.5);
+  border-color: currentColor;
+}
+
+.matColumnDef {
+  width: 50px;
+}
+
+::ng-deep .mat-checkbox-checked .mat-checkbox-background,
+::ng-deep .mat-checkbox-indeterminate .mat-checkbox-background,
+::ng-deep .mat-checkbox-checked:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element,
+::ng-deep .mat-checkbox:active:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element {
+  background-color: brown !important;
+}
+
+.table-row:focus {
+  background: rgba(0, 128, 0, 0.1);
+  outline: none;
+}
+.table-row:focus mat-cell {
+  color: white;
+}
+

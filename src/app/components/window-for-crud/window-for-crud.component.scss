@@ -1,0 +1,102 @@
+.wrap{
+  top:0;
+  left: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.window{
+  position: relative;
+  width: 800px;
+  height: 700px;
+  background: white;
+  z-index: 11;
+}
+.button-close{
+  position: relative;
+  left: 0px;
+  top: 10px;
+  width: 65px;
+  height: 40px;
+  margin-left: 85%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(165, 42, 42, 0.5);
+  border-radius: 5px;
+  transition: 500ms;
+  &:hover{
+    background: none;
+    box-shadow: 0 0 9px rgba(165, 42, 42, 0.5);
+    color: brown;
+  }
+}
+.formOwner{
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.example-full-width {
+
+  width: 90%;
+}
+
+.mat-button{
+  width: 100px;
+  color: white;
+}
+.delete{
+  background:  rgba(165, 42, 42, 0.5);
+}
+.add{
+  background: rgba(0, 128, 0, 0.5);
+
+}
+.update{
+
+  background: rgba(0, 128, 0, 0.5);
+}
+.title{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30pt;
+  letter-spacing: 10px;
+  font-weight: 600;
+
+}
+
+.buttons{
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 50px auto;
+}
+
+.table{
+  width: 100%;
+}
+
+.addCar{
+  margin: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  mat-form-field{
+  margin: 0 auto;
+    width: 23%;
+  }
+}
+
+
+
