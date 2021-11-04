@@ -16,7 +16,6 @@ import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from "@angular/material/dia
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatInputModule} from "@angular/material/input";
 import {ReactiveFormsModule} from "@angular/forms";
-import { ErrorWindowComponent } from './components/window-for-crud/error-window/error-window.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +25,6 @@ import { ErrorWindowComponent } from './components/window-for-crud/error-window/
     TableComponent,
     TableCellComponent,
     WindowForCRUDComponent,
-    ErrorWindowComponent,
   ],
   entryComponents: [WindowForCRUDComponent],
   imports: [

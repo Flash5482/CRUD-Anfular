@@ -3,7 +3,6 @@ import {OwnersCarsService} from "../../services/CarsService/cars.service";
 import {IOwnerEntity} from "../../ICarOwner/IOwnerEntity";
 import {MatDialog} from "@angular/material/dialog";
 import {WindowForCRUDComponent} from "../window-for-crud/window-for-crud.component";
-import {MatSnackBar} from "@angular/material/snack-bar";
 
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
@@ -30,24 +29,24 @@ export class OwnerComponent implements OnInit {
 
   fetchPeople() {
     this.ownersCarsService.getOwners().subscribe((response: IOwnerEntity[] | any) => {
-      this.dataOwners = response;
+      this.ownersCarsService.dataOwners = response;
+      this.ownersCarsService.lastId =  this.ownersCarsService.dataOwners?.length
     })
   }
 
   delete() {
-    if(this.ownersCarsService.isSetId){
-      this.dataOwners = this.dataOwners?.filter(item => item.id !== this.ownersCarsService.isSetId);
+    if (this.ownersCarsService.isSetId) {
+      this.ownersCarsService.dataOwners = this.ownersCarsService.dataOwners?.filter((item: any) => item.id !== this.ownersCarsService.isSetId);
       this.ownersCarsService.deleteOwnerBy(1).subscribe();
     } else {
       window.alert('You need to chose any item');
     }
-
-
   }
 
   openWindow(typeWindow: string) {
-    this.dataOwner = this.dataOwners?.find(item => item.id === this.ownersCarsService.isSetId);
-    if (this.dataOwner) {
+    this.dataOwner = this.ownersCarsService.dataOwners?.find((item: any) => item.id === this.ownersCarsService.isSetId);
+    console.log(this.dataOwner);
+    if (this.dataOwner || typeWindow === 'add') {
       this.ownersCarsService.ifWindowOpen = true;
       let dialogRef = this.dialog.open(WindowForCRUDComponent, {
         width: ' 800px',

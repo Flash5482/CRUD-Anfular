@@ -12,7 +12,8 @@ export class OwnersCarsService {
   isSetId: number | any;
   isWindow = false;
   ifWindowOpen: boolean | any;
-
+  lastId: number | any;
+  dataOwners: any;
   constructor(private http: HttpClient) {
   }
 
@@ -24,8 +25,8 @@ export class OwnersCarsService {
     return this.http.get<IOwnerCarEntity>(this.baseUrl + 'cars');
   }
 
-  getOwnerById(ownerId: number): Observable<IOwnerEntity> {
-    return this.http.post<IOwnerEntity>(this.baseUrl + `owners/` + ownerId, null);
+  addOwner(owner: any): Observable<IOwnerEntity> {
+    return this.http.post<IOwnerEntity>(this.baseUrl + `owners`, owner);
   }
 
   editOwnerBy(asOwner: IOwnerEntity): Observable<IOwnerEntity> {

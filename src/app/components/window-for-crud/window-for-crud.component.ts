@@ -1,6 +1,6 @@
 import {Component, Inject, Input, OnInit, Output} from '@angular/core';
 import {OwnersCarsService} from "../../services/CarsService/cars.service";
-import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormControl, FormGroup} from "@angular/forms";
 import {IOwnerCarEntity, IOwnerEntity} from "../../ICarOwner/IOwnerEntity";
 import {filter, map} from "rxjs/operators";
@@ -15,15 +15,17 @@ class DialogData {
 })
 export class WindowForCRUDComponent implements OnInit {
   owner: FormGroup | any;
-  carOwners: FormGroup | any;
-
+  cars: FormGroup | any;
+  newOwner: IOwnerEntity | any;
   dataCars: any;
   dataOwner: IOwnerEntity | any;
   disabledItem = false;
   isAddCar = false;
   noUpdate = true;
+  countOfCars = 0;
+  dataOwnerId: number | any;
 
-  constructor(public ownersCarsService: OwnersCarsService, @Inject(MAT_DIALOG_DATA) data: DialogData) {
+  constructor(public ownersCarsService: OwnersCarsService, @Inject(MAT_DIALOG_DATA) data: DialogData, public dialogRef: MatDialogRef<WindowForCRUDComponent>) {
     this.dataOwner = data;
     console.log(data);
   }
@@ -86,62 +88,88 @@ export class WindowForCRUDComponent implements OnInit {
   }
 
   fetchCars() {
-    const dataOwnerId = this.dataOwner.dataOwner.id;
+    if (this.dataOwner.typeOfDialogRead === 'add') {
+      this.dataOwnerId = ++this.ownersCarsService.lastId;
+    } else {
+      this.dataOwnerId = this.dataOwner.dataOwner.id;
+    }
     this.ownersCarsService.getAllCars()
       .pipe(map((items: any) =>
-        items.filter((item: any) => item.userId === dataOwnerId)))
+        items.filter((item: any) => item.userId === this.dataOwnerId)))
       .subscribe((response: any) => {
         this.dataCars = response;
+        this.countOfCars = this.dataCars.length;
       })
   }
 
   delete() {
-      if (this.ownersCarsService.isSetId) {
-        this.dataCars = this.dataCars?.filter((item: IOwnerCarEntity) => item.id !== this.ownersCarsService.isSetId);
-        this.ownersCarsService.deleteCar(this.ownersCarsService.isSetId).subscribe();
-      } else {
-        window.alert('You need to chose any item');
-      }
+    if (this.ownersCarsService.isSetId) {
+      this.dataCars = this.dataCars?.filter((item: IOwnerCarEntity) => item.id !== this.ownersCarsService.isSetId);
+      this.ownersCarsService.deleteCar(this.ownersCarsService.isSetId).subscribe();
+    } else {
+      window.alert('You need to chose any item');
+    }
   }
 
   addColumn() {
     this.isAddCar = true;
   }
 
-  addCar() {
+  addCars(id: number) {
+    console.log(id);
     this.isAddCar = false;
-    console.log(this.owner.value);
     const objCar = {
       id: this.owner.value['number'],
       name: this.owner.value['nameCare'],
       model: this.owner.value['model'],
       year: +this.owner.value['year'],
-      userId: this.dataOwner.dataOwner.id
+      userId: id
     }
+    this.countOfCars++;
     console.log(objCar);
     this.ownersCarsService.addCar(objCar).subscribe(() => {
-      this.fetchCars();
+      this.dataCars.push(objCar);
+      this.dataCars = [...this.dataCars];
     });
-    this.dataCars.push(objCar);
+  }
 
-    console.log(this.dataCars);
+  addCar() {
+    if (this.dataOwner.typeOfDialogRead === 'add') {
+      this.addCars(this.ownersCarsService.lastId);
+    } else {
+      this.addCars(this.dataOwner.dataOwner.id);
+    }
+  }
 
+  onUpdate() {
+    this.dataOwner.dataOwner.name = this.owner.value['name'];
+    this.dataOwner.dataOwner.surname = this.owner.value['firstName'];
+    this.dataOwner.dataOwner.lastName = this.owner.value['lastName'];
+    console.log(this.dataOwner.dataOwner);
+    this.ownersCarsService.editOwnerBy(this.dataOwner.dataOwner).subscribe();
+  }
+
+  onAddOwner() {
+    this.newOwner = {
+      id: this.ownersCarsService.lastId,
+      name: this.owner.value['name'],
+      surname: this.owner.value['firstName'],
+      lastName: this.owner.value['lastName'],
+      countOfCar: this.countOfCars
+    }
+    this.ownersCarsService.addOwner(this.newOwner).subscribe(() => {
+      this.ownersCarsService.dataOwners.push(this.newOwner);
+      this.ownersCarsService.dataOwners = [...this.ownersCarsService.dataOwners];
+    });
+    this.dialogRef.close(WindowForCRUDComponent);
   }
 
   onSubmit() {
-    if (this.noUpdate) {
-      this.dataOwner.dataOwner.name = this.owner.value['name'];
-      this.dataOwner.dataOwner.surname = this.owner.value['firstName'];
-      this.dataOwner.dataOwner.lastName = this.owner.value['lastName'];
-      console.log(this.dataOwner.dataOwner);
-      this.ownersCarsService.editOwnerBy(this.dataOwner.dataOwner).subscribe( (rep) =>{
-        console.log(rep);
-      });
-    }
+    this.dataOwner.typeOfDialogRead === 'add' ? this.onAddOwner() : this.onUpdate();
   }
 
-  save(){
+  save() {
+    console.log(this.owner.value['name']);
     this.onSubmit();
   }
-
 }

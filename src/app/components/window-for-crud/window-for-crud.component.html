@@ -27,7 +27,7 @@
 
       <div class="title">Cars</div>
       <app-table class="table" [dataOwner]="dataCars"></app-table>
-      <div class="addCar" *ngIf="this.isAddCar">
+      <div class="addCar">
 
           <mat-form-field class="example-full-width" appearance="legacy">
             <mat-label>Number</mat-label>
@@ -59,13 +59,11 @@
 
     <div class="buttons">
       <button mat-button class="mat-button add" [style.visibility]="disabledItem ? 'hidden' : 'visible'"
-              *ngIf="this.isAddCar" (click)="addCar()">Add car
+              (click)="addCar()">Add car
       </button>
-      <button mat-button class="mat-button add" [style.visibility]="disabledItem ? 'hidden' : 'visible'"
-              *ngIf="!this.isAddCar" (click)="addColumn()">Add car
-      </button>
+
       <button mat-button class="mat-button update" [style.visibility]="disabledItem ? 'hidden' : 'visible'"
-              [disabled]="!owner.valid" (click)="save()">Save
+              [disabled]="!owner.valid" (click)="save()" >Save
       </button>
       <button mat-button class="mat-button delete" [style.visibility]="disabledItem ? 'hidden' : 'visible'"
               (click)="delete()">Delete
