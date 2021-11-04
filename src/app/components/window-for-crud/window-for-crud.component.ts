@@ -1,7 +1,7 @@
 import {Component, Inject, Input, OnInit, Output} from '@angular/core';
 import {OwnersCarsService} from "../../services/CarsService/cars.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {IOwnerCarEntity, IOwnerEntity} from "../../ICarOwner/IOwnerEntity";
 import {filter, map} from "rxjs/operators";
 
@@ -18,6 +18,7 @@ export class WindowForCRUDComponent implements OnInit {
   carsForm: FormGroup | any;
   newOwner: IOwnerEntity | any;
   dataCars: any;
+  dataAllCars: any;
   dataOwner: IOwnerEntity | any;
   disabledItem = false;
   isAddCar = false;
@@ -31,6 +32,7 @@ export class WindowForCRUDComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.fetchAllCars();
     this.ownersCarsService.ifWindowOpen = true;
     if (this.dataOwner.typeOfDialogRead === 'read') {
       this.disabledItem = true;
@@ -48,16 +50,40 @@ export class WindowForCRUDComponent implements OnInit {
     });
 
     this.carsForm = new FormGroup({
-      number: new FormControl({value: '', disabled: this.disabledItem}),
+      number: new FormControl({
+        value: '',
+        disabled: this.disabledItem
+      }, Validators.pattern('^[А-ЯA-Z]{2}[0-9]{4}[А-ЯA-Z]{2}')),
       nameCare: new FormControl({value: '', disabled: this.disabledItem}),
       model: new FormControl({value: '', disabled: this.disabledItem}),
-      year: new FormControl({value: '', disabled: this.disabledItem}),
+      year: new FormControl({
+        value: '',
+        disabled: this.disabledItem
+      }, [Validators.pattern('[0-9]{4}')]),
     });
+
+    //this.carsForm.get('year').setValidators(this.validateYear);
+    //this.carsForm.get('number').setValidators(this.validCarNumber);
 
     this.fetchCars();
     if (this.dataOwner.typeOfDialogRead !== '') {
       this.setOwner();
     }
+  }
+
+  validateYear(formControl: FormControl) {
+    if (formControl.value < 1990 || formControl.value > 2021) {
+      return {validateYear: {message: 'Should be between 1990 and 2021'}}
+    }
+    return null;
+  }
+
+  validCarNumber(formControl: FormControl) {
+    const isExistCar = this.dataAllCars.some((item: any) => item.id === formControl.value);
+    if (isExistCar) {
+      return {validateYear: {message: 'This number are already exist'}}
+    }
+    return null;
   }
 
   get Name() {
@@ -109,10 +135,20 @@ export class WindowForCRUDComponent implements OnInit {
       })
   }
 
+  fetchAllCars() {
+    this.ownersCarsService.getAllCars()
+      .subscribe((response: any) => {
+        this.dataAllCars = response;
+      })
+  }
+
   delete() {
-    if (this.ownersCarsService.isSetId) {
-      this.dataCars = this.dataCars?.filter((item: IOwnerCarEntity) => item.id !== this.ownersCarsService.isSetId);
-      this.ownersCarsService.deleteCar(this.ownersCarsService.isSetId).subscribe();
+    if (typeof this.ownersCarsService.isSetId !== "number") {
+      this.ownersCarsService.deleteCar(this.ownersCarsService.isSetId).subscribe(() => {
+          this.dataCars = this.dataCars?.filter((item: IOwnerCarEntity) => item.id !== this.ownersCarsService.isSetId)
+          this.dataCars = [...this.dataCars];
+        }
+      );
     } else {
       window.alert('You need to chose any item');
     }
@@ -133,7 +169,11 @@ export class WindowForCRUDComponent implements OnInit {
       userId: id
     }
     this.countOfCars++;
-    console.log(objCar);
+    if (this.dataOwner.dataOwner !== null) {
+      this.dataOwner.dataOwner.countOfCar = this.countOfCars;
+    }
+
+    console.log('ss', this.countOfCars);
     this.ownersCarsService.addCar(objCar).subscribe(() => {
       this.dataCars.push(objCar);
       this.dataCars = [...this.dataCars];
@@ -168,7 +208,7 @@ export class WindowForCRUDComponent implements OnInit {
       this.ownersCarsService.dataOwners.push(this.newOwner);
       this.ownersCarsService.dataOwners = [...this.ownersCarsService.dataOwners];
     });
-    this.dialogRef.close(WindowForCRUDComponent);
+
   }
 
   onSubmit() {
@@ -179,7 +219,7 @@ export class WindowForCRUDComponent implements OnInit {
   }
 
   save() {
-    console.log(this.owner.value['name']);
     this.onSubmit();
+    this.dialogRef.close(WindowForCRUDComponent);
   }
 }

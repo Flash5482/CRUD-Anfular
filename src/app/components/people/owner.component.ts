@@ -4,10 +4,6 @@ import {IOwnerEntity} from "../../ICarOwner/IOwnerEntity";
 import {MatDialog} from "@angular/material/dialog";
 import {WindowForCRUDComponent} from "../window-for-crud/window-for-crud.component";
 
-export interface DialogData {
-  animal: 'panda' | 'unicorn' | 'lion';
-}
-
 @Component({
   selector: 'app-people',
   templateUrl: './owner.component.html',
@@ -17,7 +13,6 @@ export class OwnerComponent implements OnInit {
   public dataOwners: IOwnerEntity[] | undefined;
   isWindow: false | any;
   dataOwner: any;
-  typeOfDialogWindow = 'read';
 
   constructor(public dialog: MatDialog, public ownersCarsService: OwnersCarsService) {
   }
@@ -30,7 +25,7 @@ export class OwnerComponent implements OnInit {
   fetchPeople() {
     this.ownersCarsService.getOwners().subscribe((response: IOwnerEntity[] | any) => {
       this.ownersCarsService.dataOwners = response;
-      this.ownersCarsService.lastId =  this.ownersCarsService.dataOwners?.length
+      this.ownersCarsService.lastId = this.ownersCarsService.dataOwners?.length
     })
   }
 
@@ -44,7 +39,11 @@ export class OwnerComponent implements OnInit {
   }
 
   openWindow(typeWindow: string) {
-    this.dataOwner = this.ownersCarsService.dataOwners?.find((item: any) => item.id === this.ownersCarsService.isSetId);
+    if (typeWindow === 'add') {
+      this.dataOwner = null;
+    } else {
+      this.dataOwner = this.ownersCarsService.dataOwners?.find((item: any) => item.id === this.ownersCarsService.isSetId);
+    }
     console.log(this.dataOwner);
     if (this.dataOwner || typeWindow === 'add') {
       this.ownersCarsService.ifWindowOpen = true;
