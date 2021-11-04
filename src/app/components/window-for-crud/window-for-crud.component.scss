@@ -88,12 +88,16 @@
 }
 
 .addCar{
-  margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  mat-form-field{
-  margin: 0 auto;
+
+  .addCar-form{
+    margin: 10px 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  mat-form-field {
+    margin: 0 auto;
     width: 23%;
   }
 }

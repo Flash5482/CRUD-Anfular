@@ -15,7 +15,7 @@ class DialogData {
 })
 export class WindowForCRUDComponent implements OnInit {
   owner: FormGroup | any;
-  cars: FormGroup | any;
+  carsForm: FormGroup | any;
   newOwner: IOwnerEntity | any;
   dataCars: any;
   dataOwner: IOwnerEntity | any;
@@ -47,6 +47,13 @@ export class WindowForCRUDComponent implements OnInit {
       year: new FormControl({value: '', disabled: this.disabledItem}),
     });
 
+    this.carsForm = new FormGroup({
+      number: new FormControl({value: '', disabled: this.disabledItem}),
+      nameCare: new FormControl({value: '', disabled: this.disabledItem}),
+      model: new FormControl({value: '', disabled: this.disabledItem}),
+      year: new FormControl({value: '', disabled: this.disabledItem}),
+    });
+
     this.fetchCars();
     if (this.dataOwner.typeOfDialogRead !== '') {
       this.setOwner();
@@ -66,19 +73,19 @@ export class WindowForCRUDComponent implements OnInit {
   }
 
   get NameCare() {
-    return this.owner.get('nameCare');
+    return this.carsForm.get('nameCare');
   }
 
   get Number() {
-    return this.owner.get('number');
+    return this.carsForm.get('number');
   }
 
   get Model() {
-    return this.owner.get('model');
+    return this.carsForm.get('model');
   }
 
   get Year() {
-    return this.owner.get('year');
+    return this.carsForm.get('year');
   }
 
   setOwner() {
@@ -119,10 +126,10 @@ export class WindowForCRUDComponent implements OnInit {
     console.log(id);
     this.isAddCar = false;
     const objCar = {
-      id: this.owner.value['number'],
-      name: this.owner.value['nameCare'],
-      model: this.owner.value['model'],
-      year: +this.owner.value['year'],
+      id: this.carsForm.value['number'],
+      name: this.carsForm.value['nameCare'],
+      model: this.carsForm.value['model'],
+      year: +this.carsForm.value['year'],
       userId: id
     }
     this.countOfCars++;
@@ -166,6 +173,9 @@ export class WindowForCRUDComponent implements OnInit {
 
   onSubmit() {
     this.dataOwner.typeOfDialogRead === 'add' ? this.onAddOwner() : this.onUpdate();
+  }
+
+  onSubmitCar() {
   }
 
   save() {
