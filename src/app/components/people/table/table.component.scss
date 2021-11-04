@@ -1,7 +1,7 @@
 table {
   width: 100%;
-  box-shadow: 0 0 5px black;
-  margin-top: 30px;
+  overflow:scroll;
+  height:50px;
 }
 .icon{
   width: 50px;
@@ -9,6 +9,12 @@ table {
   img{
     width: 100%;
   }
+}
+.example-container{
+  margin-top: 30px;
+  height: 200px;
+  max-width: 100%;
+  overflow: auto;
 }
 
 
