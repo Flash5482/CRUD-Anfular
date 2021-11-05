@@ -23,7 +23,6 @@ export class TableComponent {
   }
 
   setColumn(id: any) {
-    console.log(id);
     this.ownersCarsService.isSetId = id;
   }
 }

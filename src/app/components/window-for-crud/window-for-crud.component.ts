@@ -12,6 +12,7 @@ class DialogData {
   selector: 'app-window-for-crud',
   templateUrl: './window-for-crud.component.html',
   styleUrls: ['./window-for-crud.component.scss']
+
 })
 export class WindowForCRUDComponent implements OnInit {
   owner: FormGroup | any;
@@ -28,7 +29,6 @@ export class WindowForCRUDComponent implements OnInit {
 
   constructor(public ownersCarsService: OwnersCarsService, @Inject(MAT_DIALOG_DATA) data: DialogData, public dialogRef: MatDialogRef<WindowForCRUDComponent>) {
     this.dataOwner = data;
-    console.log(data);
   }
 
   ngOnInit(): void {
@@ -53,18 +53,16 @@ export class WindowForCRUDComponent implements OnInit {
       number: new FormControl({
         value: '',
         disabled: this.disabledItem
-      }, Validators.pattern('^[А-ЯA-Z]{2}[0-9]{4}[А-ЯA-Z]{2}')),
+      }),
       nameCare: new FormControl({value: '', disabled: this.disabledItem}),
       model: new FormControl({value: '', disabled: this.disabledItem}),
       year: new FormControl({
         value: '',
         disabled: this.disabledItem
-      }, [Validators.pattern('[0-9]{4}')]),
+      }),
     });
-
-    //this.carsForm.get('year').setValidators(this.validateYear);
-    //this.carsForm.get('number').setValidators(this.validCarNumber);
-
+    this.Year.addValidators([Validators.pattern('[0-9]{4}'), this.validateYear]);
+    this.Number.addValidators([Validators.pattern('^[А-ЯA-Z]{2}[0-9]{4}[А-ЯA-Z]{2}')]);
     this.fetchCars();
     if (this.dataOwner.typeOfDialogRead !== '') {
       this.setOwner();
@@ -74,14 +72,6 @@ export class WindowForCRUDComponent implements OnInit {
   validateYear(formControl: FormControl) {
     if (formControl.value < 1990 || formControl.value > 2021) {
       return {validateYear: {message: 'Should be between 1990 and 2021'}}
-    }
-    return null;
-  }
-
-  validCarNumber(formControl: FormControl) {
-    const isExistCar = this.dataAllCars.some((item: any) => item.id === formControl.value);
-    if (isExistCar) {
-      return {validateYear: {message: 'This number are already exist'}}
     }
     return null;
   }
@@ -145,6 +135,7 @@ export class WindowForCRUDComponent implements OnInit {
   delete() {
     if (typeof this.ownersCarsService.isSetId !== "number") {
       this.ownersCarsService.deleteCar(this.ownersCarsService.isSetId).subscribe(() => {
+          this.dataOwner.dataOwner.countOfCar--;
           this.dataCars = this.dataCars?.filter((item: IOwnerCarEntity) => item.id !== this.ownersCarsService.isSetId)
           this.dataCars = [...this.dataCars];
         }
@@ -154,30 +145,32 @@ export class WindowForCRUDComponent implements OnInit {
     }
   }
 
-  addColumn() {
-    this.isAddCar = true;
-  }
-
   addCars(id: number) {
-    console.log(id);
-    this.isAddCar = false;
-    const objCar = {
-      id: this.carsForm.value['number'],
-      name: this.carsForm.value['nameCare'],
-      model: this.carsForm.value['model'],
-      year: +this.carsForm.value['year'],
-      userId: id
+    const ifNumberAlreadyExist = this.dataAllCars.some((item: any) => item.id === this.Number.value);
+    if (ifNumberAlreadyExist) {
+      window.alert('THis car are already exists');
+    } else {
+      this.isAddCar = false;
+      const objCar = {
+        id: this.carsForm.value['number'],
+        name: this.carsForm.value['nameCare'],
+        model: this.carsForm.value['model'],
+        year: +this.carsForm.value['year'],
+        userId: id
+      }
+      this.countOfCars++;
+      if (this.dataOwner.dataOwner !== null) {
+        this.dataOwner.dataOwner.countOfCar = this.countOfCars;
+      }
+      this.ownersCarsService.addCar(objCar).subscribe(() => {
+        this.dataCars.push(objCar);
+        this.dataCars = [...this.dataCars];
+      });
+      this.Number.setValue('');
+      this.Model.setValue('');
+      this.NameCare.setValue('');
+      this.Year.setValue('');
     }
-    this.countOfCars++;
-    if (this.dataOwner.dataOwner !== null) {
-      this.dataOwner.dataOwner.countOfCar = this.countOfCars;
-    }
-
-    console.log('ss', this.countOfCars);
-    this.ownersCarsService.addCar(objCar).subscribe(() => {
-      this.dataCars.push(objCar);
-      this.dataCars = [...this.dataCars];
-    });
   }
 
   addCar() {
@@ -192,7 +185,6 @@ export class WindowForCRUDComponent implements OnInit {
     this.dataOwner.dataOwner.name = this.owner.value['name'];
     this.dataOwner.dataOwner.surname = this.owner.value['firstName'];
     this.dataOwner.dataOwner.lastName = this.owner.value['lastName'];
-    console.log(this.dataOwner.dataOwner);
     this.ownersCarsService.editOwnerBy(this.dataOwner.dataOwner).subscribe();
   }
 
@@ -208,7 +200,6 @@ export class WindowForCRUDComponent implements OnInit {
       this.ownersCarsService.dataOwners.push(this.newOwner);
       this.ownersCarsService.dataOwners = [...this.ownersCarsService.dataOwners];
     });
-
   }
 
   onSubmit() {

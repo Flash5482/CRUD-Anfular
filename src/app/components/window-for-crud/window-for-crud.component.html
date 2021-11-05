@@ -53,7 +53,7 @@
         </mat-form-field>
         <mat-form-field class="example-full-width" appearance="legacy">
           <mat-label>Year</mat-label>
-          <input required minlength="2" [minLength]="4" [maxLength]="4" [disabled]="disabledItem" formControlName="year" matInput
+          <input required minlength="4" [minLength]="4" [maxLength]="4" [disabled]="disabledItem" formControlName="year" matInput
                  placeholder="Year">
           <mat-error *ngIf="Year.invalid || Year.isRequired">Should be between 1990 and 2021</mat-error>
         </mat-form-field>

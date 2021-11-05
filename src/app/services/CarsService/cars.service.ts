@@ -14,6 +14,7 @@ export class OwnersCarsService {
   ifWindowOpen: boolean | any;
   lastId: number | any;
   dataOwners: any;
+  dataAllCars: any;
   constructor(private http: HttpClient) {
   }
 
@@ -42,6 +43,6 @@ export class OwnersCarsService {
   }
 
   deleteCar(id: any) {
-    return this.http.delete<number>(this.baseUrl + `cars/`, id);
+    return this.http.delete<number>(this.baseUrl + `cars/` + id);
   }
 }

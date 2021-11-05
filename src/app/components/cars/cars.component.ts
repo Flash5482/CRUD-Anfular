@@ -16,8 +16,6 @@ export class CarsComponent implements OnInit {
   }
 
   fetchCars() {
-    this.carsService.getAllCars().subscribe(response => {
-      console.log(response);
-    })
+    this.carsService.getAllCars().subscribe()
   }
 }

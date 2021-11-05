@@ -44,7 +44,6 @@ export class OwnerComponent implements OnInit {
     } else {
       this.dataOwner = this.ownersCarsService.dataOwners?.find((item: any) => item.id === this.ownersCarsService.isSetId);
     }
-    console.log(this.dataOwner);
     if (this.dataOwner || typeWindow === 'add') {
       this.ownersCarsService.ifWindowOpen = true;
       let dialogRef = this.dialog.open(WindowForCRUDComponent, {
